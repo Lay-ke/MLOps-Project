@@ -9,10 +9,25 @@ import os
 import yaml
 import argparse
 
-def load_config(config_path='configs/config.yaml'):
+def load_config(config_path=None):
     """Load configuration from YAML file"""
+    config_path = config_path or os.environ.get('CONFIG_PATH', '/opt/airflow/configs/config.yaml')
     with open(config_path, 'r') as file:
         return yaml.safe_load(file)
+
+def get_tracking_uri():
+    config_path = os.environ.get('CONFIG_PATH', '/opt/airflow/configs/config.yaml')
+    with open(config_path, 'r') as file:
+        config = yaml.safe_load(file)
+    return config.get('mlflow', {}).get('tracking_uri', 'http://mlflow-server:5000')
+
+def get_experiment_name():
+    config_path = os.environ.get('CONFIG_PATH', '/opt/airflow/configs/config.yaml')
+    with open(config_path, 'r') as file:
+        config = yaml.safe_load(file)
+    return config.get('mlflow', {}).get('experiment_name', 'Default')
+
+mlflow.set_tracking_uri(get_tracking_uri())
 
 def train_model(variant_name=None):
     """Train model with specified variant hyperparameters"""
@@ -28,11 +43,13 @@ def train_model(variant_name=None):
         print(f"Training with base hyperparameters: {hyperparams}")
     
     # Load and prepare data
-    df = pd.read_csv('data/iris.csv')
+    data_path = os.environ.get('DATA_PATH', '/opt/airflow/data/iris.csv')
+    df = pd.read_csv(data_path)
     X = df.drop('species', axis=1)
     y = df['species']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+    mlflow.set_experiment(get_experiment_name())
     with mlflow.start_run():
         # Create RandomForestClassifier with dynamic hyperparameters
         clf = RandomForestClassifier(
@@ -67,9 +84,9 @@ def train_model(variant_name=None):
         )
         
         # Save model locally
-        os.makedirs('models', exist_ok=True)
+        os.makedirs('/opt/airflow/models', exist_ok=True)
         model_filename = f'latest_model_{variant_name}.pkl' if variant_name else 'latest_model.pkl'
-        joblib.dump(clf, f'models/{model_filename}')
+        joblib.dump(clf, f'/opt/airflow/models/{model_filename}')
         
         variant_info = f" (variant: {variant_name})" if variant_name else ""
         print(f"Model trained with accuracy: {acc:.4f}{variant_info}")

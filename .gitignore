@@ -7,7 +7,6 @@ logs
 
 __pycache__
 check_registry.py
-compare_ab.py
 
 *.pdf
 docker-compose.yml
