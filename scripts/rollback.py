@@ -3,9 +3,16 @@ import mlflow.sklearn
 from mlflow.tracking import MlflowClient
 import pandas as pd
 from datetime import datetime
+import yaml
+import os
 
-# Set MLflow tracking URI to match other scripts
-mlflow.set_tracking_uri("file:///home/yaw/Documents/LABS_HUB/MlOps-Project/mlruns")
+def get_tracking_uri():
+    config_path = os.environ.get('CONFIG_PATH', '/opt/airflow/configs/config.yaml')
+    with open(config_path, 'r') as file:
+        config = yaml.safe_load(file)
+    return config.get('mlflow', {}).get('tracking_uri', 'http://mlflow-server:5000')
+
+mlflow.set_tracking_uri(get_tracking_uri())
 
 def rollback_model(model_name="iris_classifier"):
     """
@@ -23,7 +30,7 @@ def rollback_model(model_name="iris_classifier"):
         
         if len(model_versions) < 2:
             print(f"Error: Need at least 2 model versions for rollback. Found {len(model_versions)} versions.")
-            return False
+            return {'status': 'error', 'message': 'Need at least 2 model versions for rollback.'}
         
         # Find current production version and previous version
         current_prod_version = None
@@ -44,7 +51,7 @@ def rollback_model(model_name="iris_classifier"):
         
         if previous_version is None:
             print("Error: Could not find a previous version to rollback to.")
-            return False
+            return {'status': 'error', 'message': 'No previous version to rollback to.'}
         
         print(f"Rolling back from version {current_prod_version.version} to version {previous_version.version}")
         
@@ -74,12 +81,11 @@ def rollback_model(model_name="iris_classifier"):
             
             print(f"Rollback complete: Model {model_name} rolled back from version {current_prod_version.version} to version {previous_version.version}")
             print(f"Version {current_prod_version.version} archived, version {previous_version.version} promoted to Production")
-        
-        return True
+            return {'status': 'success', 'from_version': current_prod_version.version, 'to_version': previous_version.version}
         
     except Exception as e:
         print(f"Error during rollback: {str(e)}")
-        return False
+        return {'status': 'error', 'message': str(e)}
 
 def get_production_model(model_name="iris_classifier"):
     """
@@ -143,6 +149,6 @@ if __name__ == "__main__":
     else:
         print("Performing model rollback...")
         success = rollback_model()
-        if success:
+        if success['status'] == 'success':
             print("\nTesting rolled back model...")
             test_production_model()
