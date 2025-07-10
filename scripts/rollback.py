@@ -134,6 +134,35 @@ def test_production_model(model_name="iris_classifier"):
         print(f"Error testing production model: {str(e)}")
         return False
 
+def promote_model_to_production(model_name="iris_classifier"):
+    """
+    Promote the latest model version to Production in the MLflow Model Registry, with detailed logging.
+    """
+    from mlflow.tracking import MlflowClient
+    client = MlflowClient()
+    model_versions = client.search_model_versions(f"name='{model_name}'", order_by=["version_number DESC"])
+    if not model_versions:
+        print("No model versions found.")
+        return False
+    latest_version = model_versions[0].version
+    print(f"Promoting model '{model_name}' version {latest_version} to Production")
+    try:
+        result = client.transition_model_version_stage(
+            name=model_name,
+            version=latest_version,
+            stage="Production",
+            archive_existing_versions=True
+        )
+        print("Promotion result:", result)
+        # Fetch and print the current stages for all versions
+        all_versions = client.search_model_versions(f"name='{model_name}'")
+        for v in all_versions:
+            print(f"Model version {v.version} current stage: {v.current_stage}")
+        return True
+    except Exception as e:
+        print("Error promoting model:", str(e))
+        return False
+
 if __name__ == "__main__":
     import sys
     

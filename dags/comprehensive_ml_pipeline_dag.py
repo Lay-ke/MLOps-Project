@@ -6,14 +6,21 @@ from airflow.operators.dummy_operator import DummyOperator
 from airflow.sensors.filesystem import FileSensor
 import sys
 import os
+import requests
 
 # Add the scripts directory to the Python path
 sys.path.append('/home/yaw/Documents/LABS_HUB/MlOps-Project/scripts')
 
 # Import our custom functions
+<<<<<<< Updated upstream:dags/comprehensive_ml_pipeline_dag.py
 from train import train_model_with_variant
 from compare_ab import load_and_compare_models
 from rollback import rollback_model_mlflow
+=======
+from train import train_model
+from compare_ab import compare_models
+from rollback import rollback_model, promote_model_to_production
+>>>>>>> Stashed changes:pipelines/comprehensive_ml_pipeline_dag.py
 
 # Default arguments for the DAG
 default_args = {
@@ -115,6 +122,22 @@ def send_success_notification(**context):
     print(f"A/B Test Details: {ab_result}")
     return message
 
+def promote_latest_model_task(**context):
+    print("Promoting latest model to Production...")
+    promote_model_to_production()
+    return "Latest model promoted to Production"
+
+def trigger_inference_reload(**context):
+    inference_url = os.environ.get("INFERENCE_API_URL", "http://inference-api:8000/reload")
+    try:
+        response = requests.post(inference_url)
+        response.raise_for_status()
+        print("Inference API reload triggered:", response.json())
+        return response.json()
+    except Exception as e:
+        print("Failed to trigger inference reload:", str(e))
+        raise
+
 # Define tasks
 start_task = DummyOperator(
     task_id='start_pipeline',
@@ -145,6 +168,12 @@ rollback_task = PythonOperator(
     dag=dag,
 )
 
+reload_inference_task = PythonOperator(
+    task_id='reload_inference_api',
+    python_callable=trigger_inference_reload,
+    dag=dag,
+)
+
 success_task = PythonOperator(
     task_id='send_notification',
     python_callable=send_success_notification,
@@ -156,5 +185,16 @@ end_task = DummyOperator(
     dag=dag,
 )
 
+promote_task = PythonOperator(
+    task_id='promote_latest_model',
+    python_callable=promote_latest_model_task,
+    dag=dag,
+)
+
 # Define task dependencies
-start_task >> train_task >> ab_test_task >> decision_task >> rollback_task >> success_task >> end_task
+start_task >> train_task >> ab_test_task >> decision_task
+# If rollback is needed, execute rollback, else promote latest model
+rollback_task.set_upstream(decision_task)
+promote_task.set_upstream(decision_task)
+rollback_task >> reload_inference_task >> success_task >> end_task
+promote_task >> reload_inference_task
