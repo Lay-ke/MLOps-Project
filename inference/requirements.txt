@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+mlflow
+scikit-learn
+numpy
+prometheus_client
+boto3
