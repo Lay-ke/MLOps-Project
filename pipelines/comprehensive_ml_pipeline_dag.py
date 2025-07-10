@@ -9,7 +9,7 @@ import os
 import requests
 
 # Add the scripts directory to the Python path
-sys.path.append('/home/yaw/Documents/LABS_HUB/MlOps-Project/scripts')
+sys.path.append('/opt/airflow/scripts')
 
 # Import our custom functions
 from train import train_model
@@ -44,10 +44,10 @@ def train_with_hyperparameter_variant(**context):
     print(f"Training model with variant: {variant_name}")
     
     # Change to project directory
-    os.chdir('/home/yaw/Documents/LABS_HUB/MlOps-Project')
+    os.chdir('/opt/airflow')
     
     # Train the model
-    train_model_with_variant(variant_name)
+    train_model(variant_name)
     return f"Model trained successfully with variant: {variant_name}"
 
 def perform_ab_testing(**context):
@@ -55,10 +55,10 @@ def perform_ab_testing(**context):
     print("Starting A/B testing...")
     
     # Change to project directory
-    os.chdir('/home/yaw/Documents/LABS_HUB/MlOps-Project')
+    os.chdir('/opt/airflow')
     
     # Load and compare models
-    result = load_and_compare_models()
+    result = compare_models()
     
     # Store result in XCom for downstream tasks
     context['task_instance'].xcom_push(key='ab_test_result', value=result)
@@ -95,8 +95,8 @@ def execute_rollback(**context):
     
     if decision == 'rollback':
         print("Executing rollback...")
-        os.chdir('/home/yaw/Documents/LABS_HUB/MlOps-Project')
-        rollback_model_mlflow()
+        os.chdir('/opt/airflow')
+        rollback_model()
         return "Rollback executed successfully"
     else:
         print("No rollback needed")
