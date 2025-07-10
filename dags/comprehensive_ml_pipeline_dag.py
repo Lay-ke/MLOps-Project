@@ -12,15 +12,9 @@ import requests
 sys.path.append('/home/yaw/Documents/LABS_HUB/MlOps-Project/scripts')
 
 # Import our custom functions
-<<<<<<< Updated upstream:dags/comprehensive_ml_pipeline_dag.py
-from train import train_model_with_variant
-from compare_ab import load_and_compare_models
-from rollback import rollback_model_mlflow
-=======
 from train import train_model
 from compare_ab import compare_models
 from rollback import rollback_model, promote_model_to_production
->>>>>>> Stashed changes:pipelines/comprehensive_ml_pipeline_dag.py
 
 # Default arguments for the DAG
 default_args = {
