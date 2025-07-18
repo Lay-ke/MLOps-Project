@@ -13,7 +13,7 @@ def get_tracking_uri():
         config = yaml.safe_load(file)
     return config.get('mlflow', {}).get('tracking_uri', 'http://mlflow-server:5000')
 
-mlflow.set_tracking_uri(get_tracking_uri())
+
 
 def get_latest_model_versions(model_name, num_versions=2):
     """
@@ -26,6 +26,7 @@ def get_latest_model_versions(model_name, num_versions=2):
     Returns:
         list: List of model versions sorted by version number (descending)
     """
+    mlflow.set_tracking_uri(get_tracking_uri())
     client = mlflow.tracking.MlflowClient()
     
     try:
