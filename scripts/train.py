@@ -31,13 +31,14 @@ def get_experiment_name():
         config = yaml.safe_load(file)
     return config.get('mlflow', {}).get('experiment_name', 'Default')
 
-mlflow.set_tracking_uri(get_tracking_uri())
+
 
 def train_model(variant_name=None):
     """Train model with specified variant hyperparameters"""
     # Load configuration
     config = load_config()
     
+    mlflow.set_tracking_uri(get_tracking_uri())
     # Get hyperparameters
     if variant_name and variant_name in config['hyperparameters']['variants']:
         hyperparams = config['hyperparameters']['variants'][variant_name]
