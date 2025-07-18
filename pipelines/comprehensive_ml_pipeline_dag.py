@@ -8,8 +8,8 @@ import sys
 import os
 import requests
 
-# Add the scripts directory to the Python path
-sys.path.append('/opt/airflow/scripts')
+# Dynamically add the scripts directory to the Python path
+sys.path.append(os.path.join(os.path.dirname(__file__), 'scripts'))
 
 # Import our custom functions
 from train import train_model
