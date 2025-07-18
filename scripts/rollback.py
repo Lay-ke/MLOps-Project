@@ -12,7 +12,7 @@ def get_tracking_uri():
         config = yaml.safe_load(file)
     return config.get('mlflow', {}).get('tracking_uri', 'http://mlflow-server:5000')
 
-mlflow.set_tracking_uri(get_tracking_uri())
+# mlflow.set_tracking_uri(get_tracking_uri())
 
 def rollback_model(model_name="iris_classifier"):
     """
