@@ -10,8 +10,12 @@ import yaml
 import argparse
 
 def load_config(config_path=None):
-    """Load configuration from YAML file"""
-    config_path = config_path or os.environ.get('CONFIG_PATH', '/opt/airflow/configs/config.yaml')
+    if not config_path:
+        # Try environment variable first
+        config_path = os.environ.get(
+            'CONFIG_PATH',
+            os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'configs', 'config.yaml')
+        )
     with open(config_path, 'r') as file:
         return yaml.safe_load(file)
 

@@ -17,9 +17,9 @@ hyperparameters:
     min_samples_leaf: 1
     random_state: 42
     test_size: 0.2
-  
+
   variants:
-    - name: "deep_forest"
+    deep_forest:
       description: "Deeper trees with more estimators"
       n_estimators: 200
       max_depth: 10
@@ -28,8 +28,8 @@ hyperparameters:
       min_samples_leaf: 2
       random_state: 42
       test_size: 0.2
-    
-    - name: "shallow_wide"
+
+    shallow_wide:
       description: "Shallow trees with many estimators"
       n_estimators: 300
       max_depth: 3
@@ -38,8 +38,8 @@ hyperparameters:
       min_samples_leaf: 5
       random_state: 42
       test_size: 0.2
-    
-    - name: "conservative"
+
+    conservative:
       description: "Conservative parameters for stability"
       n_estimators: 50
       max_depth: 4
