@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
-from airflow.operators.bash_operator import BashOperator
-from airflow.operators.dummy_operator import DummyOperator
+from airflow.operators.python import PythonOperator
+from airflow.operators.bash import BashOperator
+from airflow.operators.empty import EmptyOperator
 from airflow.sensors.filesystem import FileSensor
 import sys
 import os
@@ -133,7 +133,7 @@ def trigger_inference_reload(**context):
         raise
 
 # Define tasks
-start_task = DummyOperator(
+start_task = EmptyOperator(
     task_id='start_pipeline',
     dag=dag,
 )
@@ -174,7 +174,7 @@ success_task = PythonOperator(
     dag=dag,
 )
 
-end_task = DummyOperator(
+end_task = EmptyOperator(
     task_id='end_pipeline',
     dag=dag,
 )
