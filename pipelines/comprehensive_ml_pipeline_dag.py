@@ -32,7 +32,7 @@ dag = DAG(
     'comprehensive_ml_pipeline',
     default_args=default_args,
     description='Comprehensive ML pipeline with training, A/B testing, and automated rollback',
-    schedule_interval=timedelta(days=1),  # Run daily
+    schedule=timedelta(days=1),  # Run daily
     catchup=False,
     max_active_runs=1,
 )
