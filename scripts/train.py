@@ -47,13 +47,13 @@ def train_model(variant_name=None):
         hyperparams = config['hyperparameters']['base']
         print(f"Training with base hyperparameters: {hyperparams}")
     
-    # Load and prepare data
-    data_path = os.environ.get('DATA_PATH', '/opt/airflow/data/iris.csv')
+    # Load and prepare data from S3
+    data_path = os.environ.get('DATA_PATH', '/opt/aiflow/data/iris.csv')  # <-- UPDATED
     df = pd.read_csv(data_path)
     X = df.drop('species', axis=1)
     y = df['species']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
+    
     mlflow.set_experiment(get_experiment_name())
     with mlflow.start_run():
         # Create RandomForestClassifier with dynamic hyperparameters

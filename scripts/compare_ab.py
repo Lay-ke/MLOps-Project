@@ -93,9 +93,9 @@ def compare_models(model_name="iris_classifier", data_path=None, test_split=0.3)
     """
     print(f"\n=== A/B Model Comparison for {model_name} ===")
     
-    # Load test data
+    # Load test data from S3
     try:
-        data_path = data_path or os.environ.get('DATA_PATH', '/opt/airflow/data/iris.csv')
+        data_path = data_path or os.environ.get('DATA_PATH', '/opt/aiflow/data/iris.csv')  # <-- UPDATED
         df = pd.read_csv(data_path)
         X = df.drop('species', axis=1)
         y = df['species']
