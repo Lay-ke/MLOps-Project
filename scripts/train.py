@@ -48,7 +48,7 @@ def train_model(variant_name=None):
         print(f"Training with base hyperparameters: {hyperparams}")
     
     # Load and prepare data from S3
-    data_path = os.environ.get('DATA_PATH', '/opt/aiflow/data/iris.csv')  # <-- UPDATED
+    data_path = os.environ.get('DATA_PATH', '/opt/aiflow/dags/repo/data/iris.csv')  # <-- UPDATED
     df = pd.read_csv(data_path)
     X = df.drop('species', axis=1)
     y = df['species']
