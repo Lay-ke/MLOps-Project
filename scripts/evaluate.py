@@ -4,7 +4,7 @@ from sklearn.metrics import classification_report
 import os
 
 def evaluate_model():
-    data_path = os.environ.get('DATA_PATH', '/opt/airflow/data/iris.csv')
+    data_path = os.environ.get('DATA_PATH', '/opt/aiflow/dags/repo/data/iris.csv')  # <-- UPDATED
     model_path = os.environ.get('MODEL_PATH', '/opt/airflow/models/latest_model.pkl')
     df = pd.read_csv(data_path)
     X = df.drop('species', axis=1)
