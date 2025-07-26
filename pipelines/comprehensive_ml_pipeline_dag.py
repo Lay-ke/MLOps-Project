@@ -14,7 +14,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'scripts'))
 # Import our custom functions
 from train import train_model
 from compare_ab import compare_models
-from rollback import rollback_model, promote_model_to_production
+from rollback import rollback_model, promote_model_to_alias
 
 # Default arguments for the DAG
 default_args = {
@@ -117,9 +117,9 @@ def send_success_notification(**context):
     return message
 
 def promote_latest_model_task(**context):
-    print("Promoting latest model to Production...")
-    promote_model_to_production()
-    return "Latest model promoted to Production"
+    print("Promoting latest model to Alias...")
+    promote_model_to_alias()
+    return "Latest model promoted to Alias successfully"
 
 def trigger_inference_reload(**context):
     inference_url = os.environ.get("INFERENCE_API_URL", "http://inference-service.inference.svc.cluster.local:8000")
