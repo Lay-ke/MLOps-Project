@@ -122,9 +122,10 @@ def promote_latest_model_task(**context):
     return "Latest model promoted to Production"
 
 def trigger_inference_reload(**context):
-    inference_url = os.environ.get("INFERENCE_API_URL", "http://inference-api:8000/reload")
+    inference_url = os.environ.get("INFERENCE_API_URL", "http://inference-api:8000")
+    reload_endpoint = f"{inference_url}/reload"
     try:
-        response = requests.post(inference_url)
+        response = requests.post(reload_endpoint)
         response.raise_for_status()
         print("Inference API reload triggered:", response.json())
         return response.json()
