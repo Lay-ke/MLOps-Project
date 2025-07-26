@@ -123,6 +123,7 @@ def promote_latest_model_task(**context):
 
 def trigger_inference_reload(**context):
     inference_url = os.environ.get("INFERENCE_API_URL", "http://inference-service.inference.svc.cluster.local:8000")
+    print(f"Triggering inference API reload at {inference_url}/reload")
     reload_endpoint = f"{inference_url}/reload"
     try:
         response = requests.post(reload_endpoint)
