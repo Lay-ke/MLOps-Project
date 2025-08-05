@@ -94,7 +94,6 @@ Storage: PostgreSQL, S3-compatible storage
 
 ### System Architecture
 
-*[Architecture Diagram Placeholder]*
 ![System Architecture Diagram](./Images/MLOps-Projectt.jpg)
 
 ### Component Overview
@@ -133,8 +132,7 @@ Endpoints:
 
 ### Data Flow
 
-*[DAG Workflow Screenshot Placeholder]*
-![Dag Workfloe](./Images/dag-diagram.png)
+![Dag Workflow](./Images/dag-diagram.png)
 
 1. **Trigger**: Scheduled daily execution or manual trigger
 2. **Training**: Model training with specified hyperparameter variant
@@ -192,7 +190,6 @@ Endpoints:
 ![Reload Inference](./Images/6-reload-inference.png)
 
 #### Inference Service
-*[Inference App Interface Placeholder]*
 <!-- Insert your inference app screenshots here -->
 
 ---
