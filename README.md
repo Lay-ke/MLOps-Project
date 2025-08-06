@@ -62,22 +62,6 @@ This project implements a comprehensive MLOps pipeline for automated machine lea
 - ✅ **Performance Monitoring**: Real-time metrics and alerts
 - ✅ **Health Checks**: Service availability monitoring
 
-### Non-Functional Requirements
-
-#### Performance
-- **Inference Latency**: < 100ms per prediction
-- **Pipeline Execution**: Daily automated runs
-- **Scalability**: Horizontal scaling capability
-
-#### Reliability
-- **Availability**: 99.9% uptime target
-- **Fault Tolerance**: Automatic recovery mechanisms
-- **Data Integrity**: Immutable data and model versioning
-
-#### Security
-- **Access Control**: Role-based authentication
-- **Data Privacy**: Secure data handling protocols
-- **Audit Trail**: Complete operation logging
 
 ### Technical Stack
 ```
@@ -132,14 +116,15 @@ Endpoints:
 
 ### Data Flow
 
-![Dag Workflow](./Images/dag-diagram.png)
+![Dag Workflow](./Images/dag.png)
 
 1. **Trigger**: Scheduled daily execution or manual trigger
-2. **Training**: Model training with specified hyperparameter variant
-3. **Testing**: A/B comparison between latest model versions
-4. **Decision**: Automated rollback decision based on performance
-5. **Deployment**: Model promotion or rollback execution
-6. **Notification**: Success/failure alerts with detailed metrics
+2. **Preprocessing**: Cleaning and formatting of data
+3. **Training**: Model training with specified hyperparameter variant
+4. **Testing**: A/B comparison between latest model versions
+5. **Decision**: Automated rollback decision based on performance
+6. **Deployment**: Model promotion or rollback execution
+7. **Notification**: Success/failure alerts with detailed metrics
 
 ### Key Design Decisions
 
@@ -182,12 +167,13 @@ Endpoints:
 ### Performance Metrics
 
 *[Task Execution Screenshots]*
-![Train](./Images/1-train.png)
-![A-B Testing](./Images/2-ab-testing.png)
-![Make Decision](./Images/3-make-decision.png)
-![Promote Model](./Images/4-promote-model.png)
-![Rollback](./Images/5-rollback.png)
-![Reload Inference](./Images/6-reload-inference.png)
+![Preprocess_data](./Images/1-preprocess_data.png)
+![Train](./Images/2-train.png)
+![A-B Testing](./Images/3-ab_testing.png)
+![Make Decision](./Images/4-decision_making.png)
+![Promote Model](./Images/5-promote_model.png)
+![Rollback](./Images/6-rollback.png)
+![Reload Inference](./Images/7-reload_model.png)
 
 #### Inference Service
 <!-- Insert your inference app screenshots here -->
@@ -225,50 +211,7 @@ Endpoints:
 
 ## Getting Started
 
-### Prerequisites
-```bash
-- Docker & Docker Compose
-- Python 3.8+
-- 4GB+ RAM
-- 10GB+ Disk Space
-```
-
-### Quick Start
-```bash
-# Clone repository
-git clone <repository-url>
-cd MLOps-Project
-
-# Initialize environment
-chmod +x airflow-init.sh
-./airflow-init.sh
-
-# Start services
-docker-compose up -d
-
-# Access interfaces
-# Airflow UI: http://localhost:8080
-# MLflow UI: http://localhost:5000
-# Inference API: http://localhost:8000
-```
-
-### Configuration
-Edit `configs/config.yaml` to customize:
-- Hyperparameter variants
-- MLflow tracking URI
-- Data sources and paths
-
----
-
-## Support & Maintenance
-
-### Contact Information
-- **Technical Lead**: MLOps Team
-- **Repository**: [GitHub Repository](https://github.com/Lay-ke/MLOps-Project)
-- **Documentation**: Internal Wiki
-
-### Troubleshooting
-Common issues and solutions documented in `docs/troubleshooting.md`
+To set this up, [click on the infrastructure link](https://github.com/Lay-ke/MLOps-IAC).
 
 ---
 
