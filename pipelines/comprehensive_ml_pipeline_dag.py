@@ -15,6 +15,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'scripts'))
 from train import train_model
 from compare_ab import compare_models
 from rollback import rollback_model, promote_model_to_alias
+from preprocess import preprocess_data
 
 # Default arguments for the DAG
 default_args = {
@@ -36,6 +37,19 @@ dag = DAG(
     catchup=False,
     max_active_runs=1,
 )
+
+def preprocess_data_task(**context):
+    """Preprocess raw data and prepare it for training"""
+    print("Starting data preprocessing...")
+    
+    # Change to project directory
+    os.chdir('/opt/airflow')
+    
+    # Run preprocessing
+    output_path = preprocess_data()
+    
+    print(f"Data preprocessing completed. Cleaned data saved to: {output_path}")
+    return f"Data preprocessing completed successfully"
 
 def train_with_hyperparameter_variant(**context):
     """Train model with a specific hyperparameter variant"""
@@ -140,6 +154,12 @@ start_task = EmptyOperator(
     dag=dag,
 )
 
+preprocess_task = PythonOperator(
+    task_id='preprocess_data',
+    python_callable=preprocess_data_task,
+    dag=dag,
+)
+
 train_task = PythonOperator(
     task_id='train_model',
     python_callable=train_with_hyperparameter_variant,
@@ -188,7 +208,7 @@ promote_task = PythonOperator(
 )
 
 # Define task dependencies
-start_task >> train_task >> ab_test_task >> decision_task
+start_task >> preprocess_task >> train_task >> ab_test_task >> decision_task
 # If rollback is needed, execute rollback, else promote latest model
 rollback_task.set_upstream(decision_task)
 promote_task.set_upstream(decision_task)
