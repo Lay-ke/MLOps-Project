@@ -12,7 +12,7 @@ def preprocess_data():
     """
     # Define input and output paths
     raw_data_path = os.environ.get('RAW_DATA_PATH', '/opt/airflow/dags/repo/raw/raw_Iris.csv')
-    output_data_path = os.environ.get('OUTPUT_DATA_PATH', '/opt/airflow/dags/repo/data/iris.csv')
+    output_data_path = os.environ.get('OUTPUT_DATA_PATH', '/opt/airflow/data/iris.csv')
 
     print(f"Loading raw data from: {raw_data_path}")
     
