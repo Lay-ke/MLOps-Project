@@ -11,9 +11,9 @@ def preprocess_data():
     4. Save cleaned data to data/iris.csv
     """
     # Define input and output paths
-    raw_data_path = '/opt/airflow/raw/raw_Iris.csv'
-    output_data_path = '/opt/airflow/data/iris.csv'
-    
+    raw_data_path = os.environ.get('RAW_DATA_PATH', '/opt/airflow/dags/repo/raw/raw_iris.csv')
+    output_data_path = os.environ.get('OUTPUT_DATA_PATH', '/opt/airflow/dags/repo/data/iris.csv')
+
     print(f"Loading raw data from: {raw_data_path}")
     
     # Load raw data
