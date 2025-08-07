@@ -9,7 +9,7 @@ from prometheus_client import start_http_server, Counter
 
 app = FastAPI(title="Iris Classification API", description="ML model inference API for Iris species classification")
 MODEL_NAME = "iris_classifier"
-MODEL_STAGE = "Production"
+MODEL_ALIAS = "prod"  # Changed from MODEL_STAGE to MODEL_ALIAS
 
 # Prometheus metrics
 PREDICTION_COUNTER = Counter('iris_predictions_total', 'Total predictions made')
@@ -31,7 +31,7 @@ def get_tracking_uri():
 def load_model():
     try:
         mlflow.set_tracking_uri(get_tracking_uri())
-        model_uri = f"models:/{MODEL_NAME}/{MODEL_STAGE}"
+        model_uri = f"models:/{MODEL_NAME}@{MODEL_ALIAS}"  # Changed to use alias
         return mlflow.sklearn.load_model(model_uri)
     except Exception as e:
         print("Model not available yet:", str(e))
