@@ -168,15 +168,21 @@ Endpoints:
 
 *[Task Execution Screenshots]*
 ![Preprocess_data](./Images/1-preprocess_data.png)
+---
 ![Train](./Images/2-train.png)
+---
 ![A-B Testing](./Images/3-ab_testing.png)
+---
 ![Make Decision](./Images/4-decision_making.png)
+---
 ![Promote Model](./Images/5-promote_model.png)
+---
 ![Rollback](./Images/6-rollback.png)
+---
 ![Reload Inference](./Images/7-reload_model.png)
 
 #### Inference Service
-<!-- Insert your inference app screenshots here -->
+![Inference App](./Images/Inference-app.png)
 
 ---
 
